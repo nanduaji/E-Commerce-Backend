@@ -1,6 +1,7 @@
-const { addUser, userLogin } = require('../controllers/userController');
+const { addUser, userLogin, getUsers } = require('../controllers/userController');
 const authMiddleware = require('../middleware/authMiddleware');
 const routes = require('express').Router();
 routes.post('/addUser', addUser);
+routes.post('/getUsers',authMiddleware, getUsers);
 routes.post('/userLogin', userLogin);
 module.exports = routes;

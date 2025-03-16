@@ -51,7 +51,30 @@ const userController = {
             });
         }
     },
+    getUsers: async (req, res) => {
+        try {
+           
+            const users = await User
+                .find({  })
+                .lean();
 
+            res.status(200).json({
+                success: true,
+                statusCode: 200,
+                message: "Users fetched successfully",
+                count: users.length,
+                data: users,
+            });
+
+        } catch (err) {
+            console.log("error: ", err);
+            res.status(500).json({
+                success: false,
+                statusCode: 500,
+                message: "Internal Server Error"
+            });
+        }
+    },
     // User Login
     userLogin: async (req, res) => {
         try {

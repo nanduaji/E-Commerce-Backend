@@ -1,21 +1,39 @@
 const jwt = require('jsonwebtoken');
 
 const authMiddleware = (req, res, next) => {
-  const token = req.headers.authorization;
-
-  console.log("Received Token:", token);
-
-  if (!token) {
-    return res.status(401).json({ success: false, message: 'Unauthorized: No token provided' });
-  }
-
   try {
-    // Verify the token
-    const decoded = jwt.verify(token.replace("Bearer ", ""), process.env.JWT_SECRET);
-    req.user = decoded; // Store user data in the request object
-    next();
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({ 
+        success: false, 
+        message: "Unauthorized: No token provided or incorrect format" 
+      });
+    }
+
+    const token = authHeader.split(" ")[1]; 
+    console.log("Received Token:", token);
+
+    
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded; 
+
+    next(); 
   } catch (err) {
-    return res.status(403).json({ success: false, message: 'Forbidden: Invalid token', error: err.message });
+    console.error("JWT Verification Error:", err);
+
+    let errorMessage = "Forbidden: Invalid token";
+    if (err.name === "TokenExpiredError") {
+      errorMessage = "Forbidden: Token has expired";
+    } else if (err.name === "JsonWebTokenError") {
+      errorMessage = "Forbidden: Malformed token";
+    }
+
+    return res.status(403).json({ 
+      success: false, 
+      message: errorMessage, 
+      error: err.message 
+    });
   }
 };
 
