@@ -3,7 +3,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const userController = {
-    // Add User
     addUser: async (req, res) => {
         try {
             const { name, email, password } = req.body;
@@ -53,9 +52,9 @@ const userController = {
     },
     getUsers: async (req, res) => {
         try {
-           
+
             const users = await User
-                .find({  })
+                .find({})
                 .lean();
 
             res.status(200).json({
@@ -75,7 +74,6 @@ const userController = {
             });
         }
     },
-    // User Login
     userLogin: async (req, res) => {
         try {
             const { email, password } = req.body;
@@ -113,8 +111,8 @@ const userController = {
             }
 
             // Generate JWT token
-            const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-
+            const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '10d' });
+            console.log("token", token)
             res.status(200).json({
                 success: true,
                 statusCode: 200,

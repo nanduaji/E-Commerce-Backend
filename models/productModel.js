@@ -21,7 +21,7 @@ const productSchema = new mongoose.Schema(
     category: {
       type: String,
       required: [true, "Product category is required"],
-      enum: ["Electronics", "Clothing", "Home Appliances", "Books", "Toys", "Other"],
+    //   enum: ["Electronics", "Clothing", "Home Appliances", "Books", "Toys", "Other"],
     },
     stock: {
       type: Number,
@@ -29,18 +29,9 @@ const productSchema = new mongoose.Schema(
       min: [0, "Stock cannot be negative"],
       default: 0,
     },
-    images: [
-      {
-        url: {
-          type: String,
-          required: [true, "Image URL is required"],
-        },
-        public_id: {
-          type: String,
-          required: true,
-        },
-      },
-    ],
+    image: {
+     type: String,
+    },
     ratings: {
       type: Number,
       default: 0,
