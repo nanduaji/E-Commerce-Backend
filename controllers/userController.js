@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const userController = {
     addUser: async (req, res) => {
         try {
-            const { name, email, password } = req.body;
+            const { name, email, password,role } = req.body;
 
             // Check if required fields are present
             if (!name || !email || !password) {
@@ -32,7 +32,7 @@ const userController = {
             const encryptedPassword = await bcrypt.hash(password, 10);
 
             // Create new user
-            const newUser = new User({ name, email, password: encryptedPassword });
+            const newUser = new User({ name, email, password: encryptedPassword,role });
             await newUser.save();
 
             res.status(201).json({
@@ -118,7 +118,7 @@ const userController = {
                 statusCode: 200,
                 message: 'Login successful',
                 token,
-                data: { id: user._id, name: user.name, email: user.email }
+                data: { id: user._id, name: user.name, email: user.email,role:user.role }
             });
         } catch (err) {
             res.status(500).json({
