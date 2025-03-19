@@ -161,9 +161,9 @@ const cartController = {
     },
     deleteProductsFromCart: async (req, res) => {
         try {
-            const { id } = req.body;
-
-            if (!id) {
+            const { productId,cartId } = req.body;
+console.log("productToBeRemoved", cartId)
+            if (!productId) {
                 return res.status(400).json({
                     success: false,
                     message: "Cart ID is required",
@@ -172,10 +172,15 @@ const cartController = {
 
 
 
-            const deletedProduct = await Cart.findByIdAndDelete(
-                id,
+            const deletedProduct = await Cart.findByIdAndUpdate(
+                cartId, // Find the Cart document by its _id
+                {
+                  $pull: {
+                    products: { _id: new mongoose.Types.ObjectId(productId) }, // Use $pull to remove the product
+                  },
+                },
                 { new: true, runValidators: true }
-            );
+              );
 
             if (!deletedProduct) {
                 return res.status(404).json({
@@ -203,7 +208,6 @@ const cartController = {
             console.log("Get Cart Items Request Body:", req.body);
             
             const { user } = req.body;
-    
             // Ensure user exists
             if (!user) {
                 return res.status(400).json({ success: false, message: "User data is required" });
