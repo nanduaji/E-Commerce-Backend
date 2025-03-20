@@ -77,7 +77,7 @@ const userController = {
     userLogin: async (req, res) => {
         try {
             const { email, password } = req.body;
-
+console.log("email",email)
             // Check if fields are provided
             if (!email || !password) {
                 return res.status(400).json({
